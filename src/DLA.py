@@ -274,7 +274,7 @@ class DLA:
         im = plt.imshow(self.c,
                         extent=[0, 1,  0, 1],
                         origin='lower',
-                        cmap='viridis',
+                        cmap='jet',
                         aspect='equal',
                         vmin=0, vmax=1)
 
@@ -313,7 +313,7 @@ class DLA:
         im = ax.imshow(self.c,
                     extent=[0, 1, 0, 1],
                     origin='lower',
-                    cmap='viridis',
+                    cmap='jet',
                     aspect='equal',
                     vmin=0, vmax=1)
 
@@ -325,10 +325,9 @@ class DLA:
                             alpha=0.5)
 
         # Colorbar
-        plt.colorbar(im, label='Concentration')
         ax.set_xlabel('x', fontsize=LABELSIZE)
         ax.set_ylabel('y', fontsize=LABELSIZE)
-        cbar = plt.colorbar(im, fraction=0.046, pad=0.04)
+        cbar = plt.colorbar(im, fraction=0.046, pad=0.04, label='Concentration')
 
         def update(frame):
             """Update function for the animation."""
@@ -347,7 +346,7 @@ class DLA:
         # Create animation
         anim = FuncAnimation(fig, update, frames=num_frames,
                             interval=interval, blit=False)
-
+        anim.save(filename="../figures/timedep_diffusion.mkv", writer="ffmpeg")
         plt.show()
         return anim
 
