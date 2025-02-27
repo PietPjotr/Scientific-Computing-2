@@ -279,7 +279,7 @@ class DLA:
         im = plt.imshow(self.c,
                         extent=[0, 1,  0, 1],
                         origin='lower',
-                        cmap='spring',
+                        cmap='Spectral',
                         aspect='equal',
                         vmin=0, vmax=1)
 
@@ -318,7 +318,7 @@ class DLA:
         im = ax.imshow(self.c,
                     extent=[0, 1, 0, 1],
                     origin='lower',
-                    cmap='spring',
+                    cmap='Spectral',
                     aspect='equal',
                     vmin=0, vmax=1)
 
@@ -335,6 +335,8 @@ class DLA:
         cbar = plt.colorbar(im, fraction=0.046, pad=0.04, label='Concentration')
         cbar.set_label('Concentration', fontsize=LABELSIZE)
         cbar.ax.tick_params(labelsize=TICKSIZE)
+        plt.yticks(fontsize=TICKSIZE)
+        plt.xticks(fontsize=TICKSIZE)
 
         def update(frame):
             """Update function for the animation."""
