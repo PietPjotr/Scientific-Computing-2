@@ -21,6 +21,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage import convolve      # used for fast double for loop
 from matplotlib.animation import FuncAnimation
+import seaborn as sns
 
 # global vars indicated by all caps
 plt.rc('text', usetex=True)
@@ -278,7 +279,7 @@ class DLA:
         im = plt.imshow(self.c,
                         extent=[0, 1,  0, 1],
                         origin='lower',
-                        cmap='jet',
+                        cmap='spring',
                         aspect='equal',
                         vmin=0, vmax=1)
 
@@ -317,7 +318,7 @@ class DLA:
         im = ax.imshow(self.c,
                     extent=[0, 1, 0, 1],
                     origin='lower',
-                    cmap='jet',
+                    cmap='spring',
                     aspect='equal',
                     vmin=0, vmax=1)
 
@@ -332,6 +333,8 @@ class DLA:
         ax.set_xlabel('x', fontsize=LABELSIZE)
         ax.set_ylabel('y', fontsize=LABELSIZE)
         cbar = plt.colorbar(im, fraction=0.046, pad=0.04, label='Concentration')
+        cbar.set_label('Concentration', fontsize=LABELSIZE)
+        cbar.ax.tick_params(labelsize=TICKSIZE)
 
         def update(frame):
             """Update function for the animation."""
