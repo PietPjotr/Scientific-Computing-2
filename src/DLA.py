@@ -335,6 +335,8 @@ class DLA:
         cbar = plt.colorbar(im, fraction=0.046, pad=0.04, label='Concentration')
         cbar.set_label('Concentration', fontsize=LABELSIZE)
         cbar.ax.tick_params(labelsize=TICKSIZE)
+        plt.yticks(fontsize=TICKSIZE)
+        plt.xticks(fontsize=TICKSIZE)
 
         def update(frame):
             """Update function for the animation."""
