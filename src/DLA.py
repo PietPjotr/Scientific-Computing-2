@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import convolve      # used for fast double for loop
 from matplotlib.animation import FuncAnimation
 import seaborn as sns
+from datetime import datetime
 
 # global vars indicated by all caps
 plt.rc('text', usetex=True)
@@ -304,7 +305,7 @@ class DLA:
         plt.savefig('figures/test.pdf')
         plt.show()
 
-    def animate(self, num_frames=200, interval=1, steps_per_frame=1):
+    def animate(self, num_frames=200, interval=100, steps_per_frame=1):
         """Animate the evolution of the system.
 
         Args:
@@ -355,7 +356,10 @@ class DLA:
         # Create animation
         anim = FuncAnimation(fig, update, frames=num_frames,
                             interval=interval, blit=False)
-        anim.save(filename="../figures/timedep_diffusion.mkv", writer="ffmpeg")
+
+        # Save animation with timestamped filename
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        anim.save(filename=f"../figures/timedep_diffusion_{timestamp}.mkv", writer="ffmpeg")
         plt.show()
         return anim
 
