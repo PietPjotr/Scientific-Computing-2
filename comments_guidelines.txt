@@ -1,0 +1,59 @@
+let's all do comments in the exact same format compliant to googles docstring
+comments guidelines:
+
+https://google.github.io/styleguide/pyguide.html
+
+
+File header comments:
+    """
+    University: University of Amsterdam
+    Course: Scientific Computing
+    Authors: Margarita Petrova, Maan Scipio, Pjotr Piet
+    ID's: 15794717, 15899039, 12714933
+
+    Description: A one-line summary of the module or program, terminated by a period.
+
+    Leave one blank line.  The rest of this docstring should contain an
+    overall description of the module or program.  Optionally, it may also
+    contain a brief description of exported classes and functions and/or usage
+    examples.
+
+    Typical usage example:
+
+    foo = ClassFoo()
+    bar = foo.function_bar()
+    """
+
+
+Function comments (NOTE could maybe be a bit more lenient, only use Args and
+Returns and skip Raises same with examples, we could skip those for small
+funcions. Besides, class 'self' parameters don't need any explanation since
+this explanation will already be done at the start of the class.):
+    """Fetches rows from a Smalltable.
+
+    Retrieves rows pertaining to the given keys from the Table instance
+    represented by table_handle.  String keys will be UTF-8 encoded.
+
+    Args:
+        table_handle: An open smalltable.Table instance.
+        keys: A sequence of strings representing the key of each table
+            row to fetch.  String keys will be UTF-8 encoded.
+        require_all_keys: If True only rows with values set for all keys will be
+            returned.
+
+    Returns:
+        A dict mapping keys to the corresponding table row data
+        fetched. Each row is represented as a tuple of strings. For
+        example:
+
+        {b'Serak': ('Rigel VII', 'Preparer'),
+            b'Zim': ('Irk', 'Invader'),
+            b'Lrrr': ('Omicron Persei 8', 'Emperor')}
+
+        Returned keys are always bytes.  If a key from the keys argument is
+        missing from the dictionary, then that row was not found in the
+        table (and require_all_keys must have been False).
+
+    Raises:
+        IOError: An error occurred accessing the smalltable.
+    """
