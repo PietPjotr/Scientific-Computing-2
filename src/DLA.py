@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import convolve      # used for fast double for loop
 from matplotlib.animation import FuncAnimation
 import seaborn as sns
+from datetime import datetime
 
 # global vars indicated by all caps
 plt.rc('text', usetex=True)
@@ -355,7 +356,10 @@ class DLA:
         # Create animation
         anim = FuncAnimation(fig, update, frames=num_frames,
                             interval=interval, blit=False)
-        anim.save(filename="../figures/timedep_diffusion.mkv", writer="ffmpeg")
+
+        # Save animation with timestamped filename
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        anim.save(filename=f"../figures/timedep_diffusion_{timestamp}.mkv", writer="ffmpeg")
         plt.show()
         return anim
 
