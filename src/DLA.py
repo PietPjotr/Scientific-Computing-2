@@ -23,6 +23,10 @@ from scipy.ndimage import convolve      # used for fast double for loop
 from matplotlib.animation import FuncAnimation
 
 # global vars indicated by all caps
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
+colors = sns.color_palette("Set2", 8)
+
 LABELSIZE = 20
 TICKSIZE = 18
 
