@@ -29,7 +29,7 @@ plt.rc('font', family='serif')
 colors = sns.color_palette("Set2", 8)
 
 LABELSIZE = 20
-TICKSIZE = 18
+TICKSIZE = 16
 
 class DLA:
     # TODO: add maybe the starting position for the cluster,
