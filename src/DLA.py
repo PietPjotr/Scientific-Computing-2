@@ -279,7 +279,7 @@ class DLA:
         im = plt.imshow(self.c,
                         extent=[0, 1,  0, 1],
                         origin='lower',
-                        cmap='spring',
+                        cmap='Spectral',
                         aspect='equal',
                         vmin=0, vmax=1)
 
@@ -318,7 +318,7 @@ class DLA:
         im = ax.imshow(self.c,
                     extent=[0, 1, 0, 1],
                     origin='lower',
-                    cmap='spring',
+                    cmap='Spectral',
                     aspect='equal',
                     vmin=0, vmax=1)
 
