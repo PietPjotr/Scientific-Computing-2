@@ -304,7 +304,7 @@ class DLA:
         plt.savefig('figures/test.pdf')
         plt.show()
 
-    def animate(self, num_frames=200, interval=1, steps_per_frame=1):
+    def animate(self, num_frames=200, interval=100, steps_per_frame=1):
         """Animate the evolution of the system.
 
         Args:
