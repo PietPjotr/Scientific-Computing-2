@@ -272,6 +272,7 @@ class DLA:
 
         self.NO_steps += 1
         print(f'step: {self.NO_steps}')
+        #TODO: ASSERT FOR WHEN FULL, SO IT DOESNT GO OUT OF INDEX (boundary conditions?)
 
     def plot(self, title="test"):
         """Plot the current state of the system as a 2D color map"""
@@ -360,7 +361,8 @@ class DLA:
         # Save animation with timestamped filename
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         anim.save(filename=f"../figures/{title}timedep_diffusion_{timestamp}.mkv", writer="ffmpeg")
-        plt.show()
+        #plt.show()
+        
         return anim
 
 """
