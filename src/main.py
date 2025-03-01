@@ -21,5 +21,12 @@ def main():
     #     dla.plot()
     #     dla.step()
 
+def eta_evaluations():
+    for eta in [0.1, 0.5, 1]:
+        dla = DLA(100, eta=eta)
+        dla.animate(num_frames=20, title=f"eta_figures/DLA_eta{eta}")
+        #dla.plot(title=f"eta_figures/DLA_eta{eta}")
+
 if __name__ == "__main__":
-    main()
+    #main()
+    eta_evaluations()

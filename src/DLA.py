@@ -273,7 +273,7 @@ class DLA:
         self.NO_steps += 1
         print(f'step: {self.NO_steps}')
 
-    def plot(self):
+    def plot(self, title="test"):
         """Plot the current state of the system as a 2D color map"""
         plt.figure(figsize=(8, 8))
 
@@ -302,10 +302,10 @@ class DLA:
         plt.yticks(fontsize=TICKSIZE)
         plt.xticks(fontsize=TICKSIZE)
         plt.tight_layout()
-        plt.savefig('figures/test.pdf')
+        plt.savefig(f'../figures/{title}.pdf')
         plt.show()
 
-    def animate(self, num_frames=200, interval=100, steps_per_frame=1):
+    def animate(self, num_frames=200, interval=100, steps_per_frame=1, title=""):
         """Animate the evolution of the system.
 
         Args:
@@ -359,7 +359,7 @@ class DLA:
 
         # Save animation with timestamped filename
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        anim.save(filename=f"../figures/timedep_diffusion_{timestamp}.mkv", writer="ffmpeg")
+        anim.save(filename=f"../figures/{title}timedep_diffusion_{timestamp}.mkv", writer="ffmpeg")
         plt.show()
         return anim
 
