@@ -87,7 +87,7 @@ class DLA:
                         nc = c + dc
 
                         #TODO PJOTR: Is this boundry good?
-                        assert -1 <= nr < self.N and -1 <= nc < self.N, f"Index out of bounds: nr={nr}, nc={nc}, N={self.N}" 
+                        assert -1 <= nr < self.N and -1 <= nc < self.N, f"Index out of bounds: nr={nr}, nc={nc}, N={self.N}"
 
                         if mask[nr, nc] != 1:
                             candidates.add((nr, nc))
@@ -116,7 +116,7 @@ class DLA:
 
         # Update all point using the diffusion equation as stated in the assignment
         for x in range(0, self.N):
-            for y in range(0, self.N):  # Skip boundary rows
+            for y in range(0, self.N):
 
                 # skip cluster values, source values and sink values
                 if self.sources[y, x] or self.sinks[y, x] or self.cluster[y, x]:
@@ -369,7 +369,7 @@ class DLA:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         anim.save(filename=f"../figures/{title}timedep_diffusion_{timestamp}.mkv", writer="ffmpeg")
         #plt.show()
-        
+
         return anim
 
 """
