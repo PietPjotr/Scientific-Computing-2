@@ -84,11 +84,8 @@ class DLA:
                 if self.cluster[r, c] == 1:
                     for dr, dc in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
                         nr = r + dr
-                        nc = c + dc
-
-                        #TODO PJOTR: Is this boundry good?
-                        assert -1 <= nr < self.N and -1 <= nc < self.N, f"Index out of bounds: nr={nr}, nc={nc}, N={self.N}"
-
+                        nc = (c + dc)%(self.N-1) # Make sure neighbour is within grid
+                        # TODO: ADD ASSERT OR BREAK IF NOT THE CASE
                         if mask[nr, nc] != 1:
                             candidates.add((nr, nc))
 
