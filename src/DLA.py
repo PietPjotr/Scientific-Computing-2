@@ -365,9 +365,7 @@ class DLA:
         anim = FuncAnimation(fig, update, frames=num_frames,
                             interval=interval, blit=False)
 
-        # Save animation with timestamped filename
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        anim.save(filename=f"../figures/{title}timedep_diffusion_{timestamp}.mkv", writer="ffmpeg")
+        anim.save(filename=f"../figures/timedep_diffusion_{title}.mkv", writer="ffmpeg")
         #plt.show()
 
         return anim
