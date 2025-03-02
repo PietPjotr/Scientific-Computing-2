@@ -84,11 +84,7 @@ class DLA:
                 if self.cluster[r, c] == 1:
                     for dr, dc in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
                         nr = r + dr
-                        nc = c + dc
-
-                        #TODO PJOTR: Is this boundry good?
-                        assert -1 <= nr < self.N and -1 <= nc < self.N, f"Index out of bounds: nr={nr}, nc={nc}, N={self.N}"
-
+                        nc = (c + dc)%(self.N-1) # Make sure neighbour is within grid
                         if mask[nr, nc] != 1:
                             candidates.add((nr, nc))
 
@@ -279,7 +275,11 @@ class DLA:
 
         self.NO_steps += 1
         print(f'step: {self.NO_steps}')
-        #TODO: ASSERT FOR WHEN FULL, SO IT DOESNT GO OUT OF INDEX (boundary conditions?)
+        
+        # Break if the cluster reaches the top of the grid
+        if np.any(self.cluster[self.N -2, :] == 1):
+            print(f"Cluster reached the top of the grid at step {self.NO_steps}")
+            raise StopIteration
 
     def plot(self, title="test"):
         """Plot the current state of the system as a 2D color map"""
@@ -365,9 +365,7 @@ class DLA:
         anim = FuncAnimation(fig, update, frames=num_frames,
                             interval=interval, blit=False)
 
-        # Save animation with timestamped filename
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        anim.save(filename=f"../figures/{title}timedep_diffusion_{timestamp}.mkv", writer="ffmpeg")
+        anim.save(filename=f"../figures/timedep_diffusion_{title}.mkv", writer="ffmpeg")
         #plt.show()
 
         return anim

@@ -13,6 +13,7 @@ python3 main.py
 """
 
 from DLA import *
+from GrayScott import *
 
 def main():
     dla = DLA(100, eta=1)
@@ -22,11 +23,17 @@ def main():
     #     dla.step()
 
 def eta_evaluations():
-    for eta in [0.1, 0.5, 1, 2, 5, 10]:
+    for eta in [10]:
         dla = DLA(100, eta=eta)
-        dla.animate(num_frames=2000, title=f"eta_figures/DLA_eta{eta}")
+        dla.animate(num_frames=1000, title=f"eta_figures/DLA_eta{eta}")
         #dla.plot(title=f"eta_figures/DLA_eta{eta}")
+
+def gray_scott():
+    gs = GrayScott(100)
+    gs.animate(num_frames=150, title="GrayScott_150frames")
+
 
 if __name__ == "__main__":
     #main()
-    eta_evaluations()
+    #eta_evaluations()
+    gray_scott()

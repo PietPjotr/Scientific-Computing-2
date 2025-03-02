@@ -56,16 +56,16 @@ class GrayScott:
         '''
         Reaction step of the Gray-Scott model
         '''
-        u, v = self.u[1:-1, 1:-1], self.u[1:-1, 1:-1]
+        u_ins, v_ins = self.u[1:-1, 1:-1], self.u[1:-1, 1:-1] # u inside, v inside grid TODO: check if this is correct
         Lapl_u = self.Laplacian(self.u)
         Lapl_v = self.Laplacian(self.v)
 
-        uv_squared = self.u*self.v*self.v
-        dudt = self.Du*Lapl_u - uv_squared + self.f*(1 - self.u)
-        dvdt = self.Dv*Lapl_v + uv_squared - (self.f + self.k)*self.v
+        uv_squared = u_ins*v_ins*v_ins
+        dudt = self.Du*Lapl_u - uv_squared + self.f*(1 - u_ins)
+        dvdt = self.Dv*Lapl_v + uv_squared - (self.f + self.k)* v_ins
 
-        self.u += dudt
-        self.v += dvdt
+        self.u[1:-1, 1:-1] += dudt
+        self.v[1:-1, 1:-1] += dvdt
 
         self.Boundary_conditions(self.u)
         self.Boundary_conditions(self.v)
@@ -97,12 +97,12 @@ class GrayScott:
 
         def update(frame):
             for _ in range(steps_per_frame):
-                self.update()
+                self.Reaction()
             im.set_array(self.v)
             return [im]
         
         anim = FuncAnimation(fig, update, frames=num_frames, interval=interval, blit=False)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        anim.save(f'../figures/{title}_{timestamp}.mkv', writer="ffmpeg")
+        anim.save(f'../figures/GrayScott/{title}.mkv', writer="ffmpeg")
         return anim
         
