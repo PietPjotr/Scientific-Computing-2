@@ -85,7 +85,6 @@ class DLA:
                     for dr, dc in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
                         nr = r + dr
                         nc = (c + dc)%(self.N-1) # Make sure neighbour is within grid
-                        # TODO: ADD ASSERT OR BREAK IF NOT THE CASE
                         if mask[nr, nc] != 1:
                             candidates.add((nr, nc))
 
@@ -276,7 +275,11 @@ class DLA:
 
         self.NO_steps += 1
         print(f'step: {self.NO_steps}')
-        #TODO: ASSERT FOR WHEN FULL, SO IT DOESNT GO OUT OF INDEX (boundary conditions?)
+        
+        # Break if the cluster reaches the top of the grid
+        if np.any(self.cluster[self.N -2, :] == 1):
+            print(f"Cluster reached the top of the grid at step {self.NO_steps}")
+            raise StopIteration
 
     def plot(self, title="test"):
         """Plot the current state of the system as a 2D color map"""
