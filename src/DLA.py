@@ -85,6 +85,10 @@ class DLA:
                     for dr, dc in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
                         nr = r + dr
                         nc = c + dc
+
+                        #TODO PJOTR: Is this boundry good?
+                        assert -1 <= nr < self.N and -1 <= nc < self.N, f"Index out of bounds: nr={nr}, nc={nc}, N={self.N}" 
+
                         if mask[nr, nc] != 1:
                             candidates.add((nr, nc))
 
@@ -241,6 +245,9 @@ class DLA:
         # pick the positions to add:
         pos_to_add_idx = np.random.choice(len(poss), replace=False, p=probs)
         pos_to_add = poss[pos_to_add_idx]
+
+        # make sure position is not outside of the grid
+        assert 0 <= pos_to_add[0] < self.N and 0 <= pos_to_add[1] < self.N, f"position: {pos_to_add} is outside of the grid"
 
         self.cluster[pos_to_add] = 1      # add to cluster
         self.c[pos_to_add] = 0            # set concentration to 0
