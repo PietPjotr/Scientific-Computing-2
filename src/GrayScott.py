@@ -33,8 +33,6 @@ class GrayScott:
         # Noise
         self.v += 0.01*np.random.rand(N, N)
 
-
-
     def Boundary_conditions(self, vector):
         '''
         Periodic boundary conditions
@@ -56,7 +54,7 @@ class GrayScott:
         '''
         Reaction step of the Gray-Scott model
         '''
-        u_ins, v_ins = self.u[1:-1, 1:-1], self.u[1:-1, 1:-1] # u inside, v inside grid TODO: check if this is correct
+        u_ins, v_ins = self.u[1:-1, 1:-1], self.v[1:-1, 1:-1] # u inside, v inside grid TODO: check if this is correct
         Lapl_u = self.Laplacian(self.u)
         Lapl_v = self.Laplacian(self.v)
 
@@ -82,7 +80,7 @@ class GrayScott:
         plt.xticks(fontsize=TICKSIZE)
         plt.yticks(fontsize=TICKSIZE)
         plt.tight_layout()
-        plt.savefig(f'../figures/{title}.pdf')
+        plt.savefig(f'../figures/GrayScott/{title}.pdf')
         plt.show()
 
     def animate(self, num_frames=200, interval=100, steps_per_frame=1, title="GrayScott"):

@@ -30,10 +30,18 @@ def eta_evaluations():
 
 def gray_scott():
     gs = GrayScott(100)
+    for i in range(10000):
+        gs.Reaction()
+        if i % 200 == 0:
+            print(f"Iteration {i}")
+    
+    # Plot the final state
+    gs.plot(title="GS_pattern")
+    
     gs.animate(num_frames=150, title="GrayScott_150frames")
 
 
 if __name__ == "__main__":
-    #main()
-    #eta_evaluations()
+    # main()
+    # eta_evaluations()
     gray_scott()
