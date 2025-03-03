@@ -54,7 +54,7 @@ class GrayScott:
         '''
         Reaction step of the Gray-Scott model
         '''
-        u_ins, v_ins = self.u[1:-1, 1:-1], self.v[1:-1, 1:-1] # u inside, v inside grid TODO: check if this is correct
+        u_ins, v_ins = self.u[1:-1, 1:-1], self.v[1:-1, 1:-1] 
         Lapl_u = self.Laplacian(self.u)
         Lapl_v = self.Laplacian(self.v)
 

@@ -29,15 +29,16 @@ def eta_evaluations():
         #dla.plot(title=f"eta_figures/DLA_eta{eta}")
 
 def gray_scott():
-    gs = GrayScott(100)
-    gs.animate(num_frames=3000, title="GrayScott_3000frames")
-    for i in range(10000):
+    gs = GrayScott(100) #, k=0.062, f=0.035, Du=0.16, Dv=0.08)
+    nr_frames = 1000
+    gs.animate(num_frames=nr_frames, title=f"GrayScott_{nr_frames}frames")
+    for i in range(nr_frames):
         gs.Reaction()
         if i % 200 == 0:
             print(f"Iteration {i}")
     
     # Plot the final state
-    gs.plot(title="GS_pattern")
+    gs.plot(title=f"GS_pattern_{nr_frames}frames")
     
 
 
