@@ -1,7 +1,23 @@
+"""
+University: University of Amsterdam
+Course: Scientific Computing
+Authors: Margarita Petrova, Maan Scipio, Pjotr Piet
+ID's: 15794717, 15899039, 12714933
+
+Description: plots the most recent run done by test_MC.py. It plots the final
+states of the last run which (for now atleast) contains 4 different settings
+for the ps variable.
+
+Typical usage example:
+
+python3 plot_MC.py
+"""
+
 import os
 import json
 import numpy as np
 import matplotlib.pyplot as plt
+
 
 def load_data(data_folder="../data/MC"):
     """
@@ -11,7 +27,9 @@ def load_data(data_folder="../data/MC"):
         data: list of hashmaps
     """
     # Get list of all subfolders in data_folder, sorted by timestamp (latest first)
-    run_folders = sorted([d for d in os.listdir(data_folder) if os.path.isdir(os.path.join(data_folder, d))], reverse=True)
+    run_folders = sorted([d for d in os.listdir(data_folder) if
+                          os.path.isdir(os.path.join(data_folder, d))],
+                         reverse=True)
 
     if not run_folders:
         print("No simulation runs found.")
@@ -70,12 +88,14 @@ def plot_data(data):
 
         # Plot the grid
         ax = axes[i]
-        ax.imshow(grid, extent=[0, 1, 0, 1], origin='lower', cmap='Spectral', aspect='equal', vmin=0, vmax=1)
+        ax.imshow(grid, extent=[0, 1, 0, 1], origin='lower', cmap='Spectral',
+                  aspect='equal', vmin=0, vmax=1)
 
         # Overlay cluster data
         if cluster.any():
             cluster_array = np.ma.masked_where(cluster == 0, cluster)
-            ax.imshow(cluster_array, extent=[0, 1, 0, 1], origin='lower', cmap='gray', alpha=0.5)
+            ax.imshow(cluster_array, extent=[0, 1, 0, 1], origin='lower',
+                      cmap='gray', alpha=0.5)
 
         # Set title and labels
         ax.set_title(f"MC with ps={ps}", fontsize=12)
