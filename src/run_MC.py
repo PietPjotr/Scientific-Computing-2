@@ -4,17 +4,22 @@ Course: Scientific Computing
 Authors: Margarita Petrova, Maan Scipio, Pjotr Piet
 ID's: 15794717, 15899039, 12714933
 
-Description: Combines all the different modules into one and runs the required
-parts and plots.
+Description: Runs the monte carlo (MC) class for different parameter settings
+and stores them inside the data folder for analysis/plotting. This file uses
+very primitive parallization by splitting the 4 different parameter settings
+over 4 different processes. This is not quite ideal since one parameter setting
+can take significantly longer than a different one, but atleast this helps with
+some speed up and it's very easy to implement.
 
 Typical usage example:
 
-python3 test_MC.py
+python3 run_MC.py
 """
 
 import multiprocessing as mp
-from MC import *
+from MC import MC
 from datetime import datetime
+
 
 def run_mc(max_iter, ps, timestamp):
     print(f"Running MC with ps={ps}")
@@ -24,7 +29,7 @@ def run_mc(max_iter, ps, timestamp):
 
 
 def main():
-    max_iter = 1000000000
+    max_iter = 1000
     ps_values = [0.04, 0.03, 0.02, 0.01]
 
     processes = []

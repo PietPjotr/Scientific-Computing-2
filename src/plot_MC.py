@@ -4,7 +4,7 @@ Course: Scientific Computing
 Authors: Margarita Petrova, Maan Scipio, Pjotr Piet
 ID's: 15794717, 15899039, 12714933
 
-Description: plots the most recent run done by test_MC.py. It plots the final
+Description: plots the most recent run done by run_MC.py. It plots the final
 states of the last run which (for now atleast) contains 4 different settings
 for the ps variable.
 
