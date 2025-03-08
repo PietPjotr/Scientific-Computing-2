@@ -13,7 +13,7 @@ LABELSIZE = 20
 TICKSIZE = 16
 
 class GrayScott:
-    def __init__(self, N = 100, Du= 0.16, Dv = 0.08, f = 0.035, k = 0.06, dt = 1, dx = 1):
+    def __init__(self, N = 100, Du= 0.16, Dv = 0.08, f = 0.035, k = 0.06, dt = 1, dx = 1, noise = True):
         self.N = N
         self.Du = Du
         self.Dv = Dv
@@ -31,7 +31,8 @@ class GrayScott:
         self.v[middle-r:middle+r, middle-r:middle+r] = 0.25
 
         # Noise
-        self.v += 0.01*np.random.rand(N, N)
+        if noise:
+            self.v += 0.01*np.random.rand(N, N)
 
     def Boundary_conditions(self, vector):
         '''
@@ -47,7 +48,7 @@ class GrayScott:
         Determine nabla squared, e.g. Laplacian
         '''
         nabla_squared = (u[ :-2, 1:-1] + u[1:-1, :-2] - 4*u[1:-1, 1:-1] 
-                        + u[1:-1, 2:] +   u[2:  , 1:-1] )
+                        + u[1:-1, 2:] +   u[2:  , 1:-1] ) / self.dx**2
         return nabla_squared
     
     def Reaction(self):
@@ -62,8 +63,8 @@ class GrayScott:
         dudt = self.Du*Lapl_u - uv_squared + self.f*(1 - u_ins)
         dvdt = self.Dv*Lapl_v + uv_squared - (self.f + self.k)* v_ins
 
-        self.u[1:-1, 1:-1] += dudt
-        self.v[1:-1, 1:-1] += dvdt
+        self.u[1:-1, 1:-1] += dudt * self.dt
+        self.v[1:-1, 1:-1] += dvdt * self.dt
 
         self.Boundary_conditions(self.u)
         self.Boundary_conditions(self.v)
