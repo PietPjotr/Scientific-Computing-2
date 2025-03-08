@@ -69,6 +69,20 @@ class GrayScott:
 
         self.Boundary_conditions(self.u)
         self.Boundary_conditions(self.v)
+    
+    def run_until_criterium(self, threshold=0.01, max_steps=10000):
+        '''	
+        Runs simulation until the threshhold concentration or max_steps is reached.
+        '''
+        step = 0
+        while step < max_steps:
+            self.Reaction()
+            if np.all(self.v < threshold):
+                print(f"All concentrations in v fell below {threshold} at step {step}.")
+                break
+            step += 1
+        return step
+
 
     def plot(self, title="Gray-ScottSimulation"):
         """Plot the current state of the system."""
@@ -108,5 +122,6 @@ class GrayScott:
     def save_to_csv(self, title="GrayScott"):
         np.savetxt(f'../results/{title}.csv', self.v, delimiter=',')
         print(f"Data saved to ../results/{title}.csv")
+
 
         
