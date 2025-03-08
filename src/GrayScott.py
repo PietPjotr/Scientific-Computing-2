@@ -33,6 +33,7 @@ class GrayScott:
         # Noise
         if noise:
             self.v += 0.01*np.random.rand(N, N)
+            self.u += 0.01*np.random.rand(N, N)
 
     def Boundary_conditions(self, vector):
         '''
@@ -82,7 +83,7 @@ class GrayScott:
         plt.yticks(fontsize=TICKSIZE)
         plt.tight_layout()
         plt.savefig(f'../figures/GrayScott/{title}.pdf')
-        plt.show()
+
 
     def animate(self, num_frames=200, interval=100, steps_per_frame=1, title="GrayScott"):
         """Animate the evolution of the system."""
@@ -101,7 +102,11 @@ class GrayScott:
             return [im]
         
         anim = FuncAnimation(fig, update, frames=num_frames, interval=interval, blit=False)
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         anim.save(f'../figures/GrayScott/{title}.mkv', writer="ffmpeg")
         return anim
+    
+    def save_to_csv(self, title="GrayScott"):
+        np.savetxt(f'../results/{title}.csv', self.v, delimiter=',')
+        print(f"Data saved to ../results/{title}.csv")
+
         
