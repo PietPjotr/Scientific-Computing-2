@@ -50,7 +50,7 @@ figures/
 
 
 Contains the data files used in the report. The subfolders are named after the
-class of the data and contain the relevant data files for that class. 
+class of the data and contain the relevant data files for that class.
 
 data/
     MC/
@@ -59,6 +59,21 @@ data/
             datafile.json
 
     contains the data files used in the report
+
+
+Contains the necessary files for the eta analysis, and also contains a summary
+file for all the different eta runs.
+
+eta/
+    clusters/
+        clusterfile1.pkl
+        ...
+    data/
+        datafile1.csv
+        ...
+
+    summary_results.csv
+
 
 ## License
 
