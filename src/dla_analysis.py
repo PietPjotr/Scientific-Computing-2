@@ -149,17 +149,16 @@ def create_separate_plots(all_data, clusters):
     # 4. Growth Rate Comparison
     plt.figure(figsize=(10, 6))
     
-    # Calculate growth rates (height per step)
+    # growth rates (height per step)
     growth_rates = []
     
     for eta in eta_values:
         df = all_data[eta]
         if len(df) > 10: 
-            # Use linear regression to find slope (growth rate)
+            # linear regression to find slope (growth rate)
             steps = df['step'].values
             heights = df['height'].values
             
-            # Simple linear regression
             slope = np.polyfit(steps, heights, 1)[0]
             growth_rates.append(slope)
         else:
@@ -191,7 +190,7 @@ def create_separate_plots(all_data, clusters):
         
         fig, axes = plt.subplots(rows, cols, figsize=(4*cols, 4*rows))
         
-        # Flatten axes for easier indexing if multiple rows
+        # Flatten axes
         if rows > 1:
             axes = axes.flatten()
         elif rows == 1 and cols == 1:
@@ -221,7 +220,6 @@ def analyze_eta_influence():
     os.makedirs("eta_analysis/data", exist_ok=True)
     os.makedirs("eta_analysis/clusters", exist_ok=True)
     
-    # Parameters
     eta_values = [0.1, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0]
     max_steps = 100
     summary_results = []

@@ -29,7 +29,6 @@ def run_eta_evaluations():
     """Run DLA simulations with different eta values and create animations"""
     print("Running DLA with multiple eta values")
     
-    # Create output directory
     os.makedirs("eta_figures", exist_ok=True)
     
     for eta in [1, 3, 5, 8, 10]:
