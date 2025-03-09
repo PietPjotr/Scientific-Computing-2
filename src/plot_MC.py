@@ -43,7 +43,7 @@ def load_data(run_index=-1):
     Returns:
         data: list of hashmaps
     """
-    data_folder="../data/MC"
+    data_folder = "../data/MC"
 
     # Get list of all subfolders in data_folder, sorted by timestamp (latest first)
     run_folders = sorted([d for d in os.listdir(data_folder) if
