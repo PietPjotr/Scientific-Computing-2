@@ -18,6 +18,7 @@ from run_MC import run_mc_parallel
 from plot_GrayScott import plot_results
 from dla_analysis import analyze_eta_influence, visualize_results
 
+
 def run_simple_dla():
     """Run a simple DLA demonstration"""
     print("Running simple DLA demonstration")
@@ -47,10 +48,6 @@ def gray_scott():
     # Plot the final state
     gs.plot(title=f"GS_pattern_{nr_frames}frames")
 
-
-    for i in range(10):
-        dla.plot()
-        dla.step()
 
 def run_eta_evaluations():
     """Run DLA simulations with different eta values and create animations"""
