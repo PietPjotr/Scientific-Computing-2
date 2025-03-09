@@ -14,7 +14,7 @@ python3 main.py
 from DLA import DLA
 from GrayScott import *
 from plot_MC import mc_report_plot, mc_plot_data
-from run_MC import run_mc_parallel, run_mc_process
+from run_MC import run_mc_sequential
 from plot_GrayScott import plot_results
 from dla_analysis import analyze_eta_influence, visualize_results
 
@@ -105,6 +105,8 @@ def main():
     # mc_plot_data()
     # mc_plot_data()
 
+    # MC plotting: Plots the already computed data for MC (question b)
+    # mc_report_plot
     # MC plotting:
     # report_plot()
 
