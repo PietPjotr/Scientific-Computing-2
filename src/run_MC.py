@@ -40,7 +40,8 @@ def run_mc_sequential(max_iter=1000, ps_values=[1, 0.75, 0.5, 0.25]):
         try:
             mc.run()
         except StopIteration:
-            print(f"Simulation stopped early for ps={ps} due to iteration limit or reaching the top of the grid.")
+            print(f"Simulation stopped early for ps={ps} due to iteration limit" +
+                   " or reaching the top of the grid.")
         mc.save_to_csv()
 
     print("All simulations completed and saved.")
