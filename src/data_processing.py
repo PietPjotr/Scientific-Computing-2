@@ -85,12 +85,12 @@ def load_all_data():
 
 def load_clusters():
     """Load the saved cluster states"""
-    clusters_dir = "eta_analysis/clusters"
+    clusters_dir = "../eta_analysis/clusters"
     
     if not os.path.exists(clusters_dir):
         print(f"Directory {clusters_dir} not found!")
         return None
-    
+    print(clusters_dir)
     pkl_files = [f for f in os.listdir(clusters_dir) if f.endswith('.pkl')]
     
     if not pkl_files:
