@@ -62,7 +62,7 @@ def run_eta_evaluations():
     #     dla.animate(num_frames=1000, title=f"eta_figures/DLA_eta{eta}")
     #     dla.plot(title=f"eta_figures/DLA_eta{eta}")
     visualize_results()
-    
+
 
 def run_gray_scott():
     """Run Gray-Scott simulations with different parameter values"""
@@ -93,22 +93,19 @@ def main():
 
     # DLA eta parameter analysis (run simulations)
     analyze_eta_influence()
-    
+
     # Visualize previously saved DLA results
     visualize_results()
-    
+
     # Gray-Scott simulations
     #run_gray_scott()
 
-    # MC run:
-    # run_mc_parallel(1000)
-    # mc_plot_data()
+    # MC run: takes about ~5 minutes to run and also shows plots the results
+    # run_mc_sequential(60000)
     # mc_plot_data()
 
     # MC plotting: Plots the already computed data for MC (question b)
     # mc_report_plot
-    # MC plotting:
-    # report_plot()
 
 
 if __name__ == "__main__":
