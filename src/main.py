@@ -37,7 +37,7 @@ def run_eta_evaluations():
         dla.animate(num_frames=1000, title=f"eta_figures/DLA_eta{eta}")
         dla.plot(title=f"eta_figures/DLA_eta{eta}")
         
-def gray_scott():
+def run_gray_scott():
     """Run Gray-Scott simulations with different parameter values"""
     f_values =[0.025, 0.03, 0.035, 0.04, 0.045, 0.05]
     du_values = [0.12, 0.16, 0.2]
@@ -51,6 +51,11 @@ def gray_scott():
             titles.append(f"f={f} ({nr_iterations} iterations)du{du}.csv")
             gs.save_to_csv(f"f={f} ({nr_iterations} iterations)du{du}")
         plot_results(titles, "f", f_values, iterations, title=f"GrayScott_results_fvaluesdu{du}")
+    
+    # Mitosis simulation
+    # gs = GrayScott(100, k=0.06, f=0.025, Du=0.2, Dv=0.08, noise=True)
+    # gs.animate(num_frames=2000, title="GrayScott_mitosis_0.2")
+    
 
 def main():
     """Main function to run the selected simulation"""
@@ -63,10 +68,10 @@ def main():
     # analyze_eta_influence()
     
     # Visualize previously saved DLA results
-    visualize_results()
+    # visualize_results()
     
     # Gray-Scott simulations
-    # run_gray_scott()
+    run_gray_scott()
 
 if __name__ == "__main__":
     main()

@@ -26,11 +26,11 @@ def plot_results(filenames, variable_name, variables, iterations, title="GraySco
     for i, filename in enumerate(filenames):
         data = load_csv(filename)
         im = axs[i].imshow(data, cmap='Spectral', origin='lower', extent=[0, 1, 0, 1])
-        axs[i].set_title(f"{variable_name} = {variables[i]}, {iterations[i]} iterations", fontsize=LABELSIZE)
+        axs[i].set_title(rf"${variable_name}$ = {variables[i]}, {iterations[i]} iterations", fontsize=LABELSIZE, pad=15)
         axs[i].tick_params(labelsize=TICKSIZE)
         cbar = fig.colorbar(im, ax=axs[i], fraction=0.046, pad=0.04)
         cbar.ax.tick_params(labelsize=TICKSIZE)
-        if i % n_cols == 0 or i == n_cases - 1:
+        if i % n_cols == 0:
             axs[i].set_ylabel('y', fontsize=LABELSIZE)
         else:
             cbar.set_label('Concentration', fontsize=LABELSIZE)
