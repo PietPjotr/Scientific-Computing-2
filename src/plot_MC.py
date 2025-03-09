@@ -193,4 +193,5 @@ def mc_report_plot():
 
 
 if __name__ == "__main__":
-    mc_report_plot()
+    # mc_report_plot()
+    mc_plot_data()
