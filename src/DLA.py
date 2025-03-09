@@ -339,6 +339,5 @@ class DLA:
                             interval=interval, blit=False)
 
         anim.save(filename=f"../figures/{title}DLA.mkv", writer="ffmpeg")
-        plt.show()
 
         return anim

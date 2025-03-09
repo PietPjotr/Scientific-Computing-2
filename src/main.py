@@ -22,21 +22,21 @@ import os
 
 def run_simple_dla():
     """Run a simple DLA demonstration"""
-    print("Running simple DLA demonstration")
+    print("Running simple DLA demonstration, will run until step=200")
     dla = DLA(100, eta=1)
-    dla.animate(num_frames=20)
-    for i in range(10):
-        dla.step()
+    dla.animate(num_frames=200)
 
 
 def eta_evaluations():
+    """Runs the eta evaluation code."""
     for eta in [10]:
         dla = DLA(100, eta=eta)
         dla.animate(num_frames=1000, title=f"eta_figures/DLA_eta{eta}")
-        #dla.plot(title=f"eta_figures/DLA_eta{eta}")
+        dla.plot(title=f"eta_figures/DLA_eta{eta}")
 
 
 def gray_scott():
+    """Runs and plots Gray_scott."""
     gs = GrayScott(100) #, k=0.062, f=0.035, Du=0.16, Dv=0.08)
     nr_frames = 1000
     gs.animate(num_frames=nr_frames, title=f"GrayScott_{nr_frames}frames")
@@ -90,24 +90,28 @@ def main():
     """Main function to run the selected simulation"""
     # Uncomment the function you want to run
 
-    # Simple DLA demonstration
-    run_simple_dla()
+    # Simple DLA demonstration, runs until step=200 and stores resulting figure
+    # in figures/DLA.mkv should take around 3 minutes
+    # run_simple_dla()
 
-    # DLA eta parameter analysis (run simulations)
+    # DLA eta parameter analysis (run simulations) reruns all and takes quite
+    # some time, automatically turned off
     # analyze_eta_influence()
 
     # Visualize previously saved DLA results
     # visualize_results()
 
     # Gray-Scott simulations
-    #run_gray_scott()
+    # run_gray_scott()
 
     # MC run: takes about ~5 minutes to run and also shows plots the results
+    # note: set to 10000 to make it faster, but the simulation won't be complete
     # run_mc_sequential(60000)
     # mc_plot_data()
 
-    # MC plotting: Plots the already computed data for MC (question b)
-    # mc_report_plot
+    # MC plotting: Plots the already computed data for MC (question b) see
+    # figures/MC/MC_report.pdf for result
+    # mc_report_plot()
 
 
 if __name__ == "__main__":

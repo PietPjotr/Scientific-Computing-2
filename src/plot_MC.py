@@ -92,7 +92,6 @@ def mc_plot_data():
     Plots the 4 simulations in a 2x2 subplot.
     """
     data = load_data()
-    print(data)
     if not data:
         print("No data to plot.")
         return
@@ -151,7 +150,8 @@ def mc_report_plot():
     filtered_data = [item for item in all_data if item["sticking_probability"] in desired_ps]
 
     # Sort the filtered data by sticking probability (ps), descending order
-    filtered_data_sorted = sorted(filtered_data, key=lambda x: x["sticking_probability"], reverse=True)
+    filtered_data_sorted = sorted(filtered_data, key=lambda x: x["sticking_probability"],
+                                  reverse=True)
 
     # Create a 3x2 grid of subplots, with shared x and y axes
     fig, axes = plt.subplots(3, 2, figsize=(8, 12), sharex=True, sharey=True)
@@ -193,5 +193,5 @@ def mc_report_plot():
 
 
 if __name__ == "__main__":
-    # mc_report_plot()
     mc_plot_data()
+    mc_report_plot()
