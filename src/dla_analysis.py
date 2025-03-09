@@ -92,69 +92,77 @@ def run_simulation_with_data_saving(eta, N=100, max_steps=100):
     }
 
 def create_separate_plots(all_data, clusters):
-    """Create and save each plot separately"""
+    """Create and save each plot separately using the same color palette as GrayScott"""
     if not all_data or not clusters:
         return
     
     eta_values = sorted(all_data.keys())
-    colors = sns.color_palette("viridis", len(eta_values))
+    
+    colors = sns.color_palette("Set2", 8)
+    LABELSIZE = 42
+    TICKSIZE = 34
     
     os.makedirs("eta_analysis", exist_ok=True)
     
     # 1. Height Growth Plot
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 8))
     for i, eta in enumerate(eta_values):
         df = all_data[eta]
-        plt.plot(df['step'], df['height'], label=f'eta = {eta}', color=colors[i])
+        plt.plot(df['step'], df['height'], label=f'eta = {eta}', color=colors[i % len(colors)])
     
-    plt.xlabel('Step')
-    plt.ylabel('Height')
-    plt.title('Cluster Height Growth', fontsize=14)
+    plt.xlabel('Step', fontsize=LABELSIZE)
+    plt.ylabel('Height', fontsize=LABELSIZE)
+    # plt.title('Cluster Height Growth', fontsize=LABELSIZE)
     plt.grid(True, alpha=0.3)
-    plt.legend()
+    plt.legend(fontsize=TICKSIZE-5)
+    plt.xticks(fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
     plt.tight_layout()
-    plt.savefig('eta_analysis/height_growth.png', dpi=300)
+    plt.savefig('eta_analysis/height_growth.pdf')
     plt.close()
     
     # 2. Size Growth Plot
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 8))
     for i, eta in enumerate(eta_values):
         df = all_data[eta]
-        plt.plot(df['step'], df['size'], label=f'eta = {eta}', color=colors[i])
+        plt.plot(df['step'], df['size'], label=f'eta = {eta}', color=colors[i % len(colors)])
     
-    plt.xlabel('Step')
-    plt.ylabel('Cluster Size (sites)')
-    plt.title('Cluster Size Growth', fontsize=14)
+    plt.xlabel('Step', fontsize=LABELSIZE)
+    plt.ylabel('Cluster Size (sites)', fontsize=LABELSIZE)
+    # plt.title('Cluster Size Growth', fontsize=LABELSIZE)
     plt.grid(True, alpha=0.3)
-    plt.legend()
+    plt.legend(fontsize=TICKSIZE-5)
+    plt.xticks(fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
     plt.tight_layout()
-    plt.savefig('eta_analysis/size_growth.png', dpi=300)
+    plt.savefig('eta_analysis/size_growth.pdf')
     plt.close()
     
     # 3. Height vs Size Plot
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 8))
     for i, eta in enumerate(eta_values):
         df = all_data[eta]
-        plt.plot(df['size'], df['height'], label=f'eta = {eta}', color=colors[i])
+        plt.plot(df['size'], df['height'], label=f'eta = {eta}', color=colors[i % len(colors)])
     
-    plt.xlabel('Cluster Size (sites)')
-    plt.ylabel('Height')
-    plt.title('Height vs Size Relationship', fontsize=14)
+    plt.xlabel('Cluster Size (sites)', fontsize=LABELSIZE)
+    plt.ylabel('Height', fontsize=LABELSIZE)
+    # plt.title('Height vs Size Relationship', fontsize=LABELSIZE)
     plt.grid(True, alpha=0.3)
-    plt.legend()
+    plt.legend(fontsize=TICKSIZE-5)
+    plt.xticks(fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
     plt.tight_layout()
-    plt.savefig('eta_analysis/height_vs_size.png', dpi=300)
+    plt.savefig('eta_analysis/height_vs_size.pdf')
     plt.close()
     
     # 4. Growth Rate Comparison
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 8))
     
-    # growth rates (height per step)
     growth_rates = []
     
     for eta in eta_values:
         df = all_data[eta]
-        if len(df) > 10: 
+        if len(df) > 10:  # Ensure enough data points
             # linear regression to find slope (growth rate)
             steps = df['step'].values
             heights = df['height'].values
@@ -164,54 +172,57 @@ def create_separate_plots(all_data, clusters):
         else:
             growth_rates.append(0)
     
-    bars = plt.bar(range(len(eta_values)), growth_rates, color=colors)
+    bars = plt.bar(range(len(eta_values)), growth_rates, color=[colors[i % len(colors)] for i in range(len(eta_values))])
     
     for bar, rate in zip(bars, growth_rates):
         height = bar.get_height()
         plt.text(bar.get_x() + bar.get_width()/2., height + 0.01,
-                f'{rate:.3f}', ha='center', va='bottom')
+                f'{rate:.3f}', ha='center', va='bottom', fontsize=TICKSIZE)
     
-    plt.xlabel('Eta Value')
-    plt.ylabel('Height Growth Rate')
-    plt.title('Growth Rate Comparison', fontsize=14)
-    plt.xticks(range(len(eta_values)), [str(eta) for eta in eta_values])
+    plt.xlabel('Eta Value', fontsize=LABELSIZE)
+    plt.ylabel('Height Growth Rate', fontsize=LABELSIZE)
+    # plt.title('Growth Rate Comparison', fontsize=LABELSIZE)
+    plt.xticks(range(len(eta_values)), [str(eta) for eta in eta_values], fontsize=TICKSIZE-5)
+    plt.yticks(fontsize=TICKSIZE)
     plt.grid(True, alpha=0.3, axis='y')
     plt.tight_layout()
-    plt.savefig('eta_analysis/growth_rates.png', dpi=300)
+    plt.savefig('eta_analysis/growth_rates.pdf')
     plt.close()
-        
+    
     # 5. Side-by-side comparison of all clusters
     if eta_values:
         if len(eta_values) <= 4:
             rows, cols = 1, len(eta_values)
         else:
-            cols = 4 
-            rows = (len(eta_values) + cols - 1) // cols  # Ceiling division
+            cols = 4  
+            rows = (len(eta_values) + cols - 1) // cols  
         
         fig, axes = plt.subplots(rows, cols, figsize=(4*cols, 4*rows))
         
-        # Flatten axes
+        # Flatten axes for easier indexing if multiple rows
         if rows > 1:
             axes = axes.flatten()
         elif rows == 1 and cols == 1:
             axes = [axes]  
             
+        # Custom colormap
         cmap = LinearSegmentedColormap.from_list('cluster_cmap', ['white', 'darkblue'])
         
+        # Plot each cluster
         for i, eta in enumerate(eta_values):
             if i < len(axes):
                 cluster = clusters[eta]
                 axes[i].imshow(cluster, cmap=cmap, origin='lower')
-                axes[i].set_title(f'eta = {eta}')
-                axes[i].set_xlabel('x')
-                axes[i].set_ylabel('y')
-        
-        # hide unused subplots
+                axes[i].set_title(f'eta = {eta}', fontsize=LABELSIZE)
+                axes[i].tick_params(axis='both', which='major', labelsize=TICKSIZE-5)
+                axes[i].set_xlabel('x', fontsize=LABELSIZE)
+                axes[i].set_ylabel('y', fontsize=LABELSIZE)
+
         for i in range(len(eta_values), len(axes)):
             axes[i].axis('off')
         
         plt.tight_layout()
-        plt.savefig('eta_analysis/all_clusters.png', dpi=300)
+        plt.savefig('eta_analysis/all_clusters.pdf', dpi=300)
         plt.close()
 
 def analyze_eta_influence():
