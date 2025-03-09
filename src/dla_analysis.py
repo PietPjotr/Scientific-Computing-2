@@ -19,6 +19,13 @@ from matplotlib.colors import LinearSegmentedColormap
 from DLA import DLA
 from data_processing import save_step_data_to_csv, load_all_data, load_clusters
 
+# Global settings
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
+colors = sns.color_palette("Set2", 8)
+LABELSIZE = 18
+TICKSIZE = 16
+
 def run_simulation_with_data_saving(eta, N=100, max_steps=100):
     """Run a single DLA simulation and save data"""
     print(f"\nSimulating with eta = {eta}")
@@ -43,6 +50,7 @@ def run_simulation_with_data_saving(eta, N=100, max_steps=100):
             
             # one step using the step method
             start_iter_time = time.time()
+            
             try:
                 dla.step()
                 step_successful = True
@@ -75,7 +83,6 @@ def run_simulation_with_data_saving(eta, N=100, max_steps=100):
                     
         except Exception as e:
             print(f"  Unexpected error at step {step}: {e}")
-            
     save_step_data_to_csv(step_data, eta)
     
     final_height = height if 'height' in locals() else 0
@@ -98,64 +105,25 @@ def create_separate_plots(all_data, clusters):
     
     eta_values = sorted(all_data.keys())
     
-    colors = sns.color_palette("Set2", 8)
-    LABELSIZE = 42
-    TICKSIZE = 34
-    
-    os.makedirs("eta_analysis", exist_ok=True)
-    
     # 1. Height Growth Plot
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(6, 4))
     for i, eta in enumerate(eta_values):
         df = all_data[eta]
-        plt.plot(df['step'], df['height'], label=f'eta = {eta}', color=colors[i % len(colors)])
+        plt.plot(df['step'], df['height'], label=rf'$\eta$={eta}', color=colors[i % len(colors)])
     
     plt.xlabel('Step', fontsize=LABELSIZE)
     plt.ylabel('Height', fontsize=LABELSIZE)
     # plt.title('Cluster Height Growth', fontsize=LABELSIZE)
     plt.grid(True, alpha=0.3)
-    plt.legend(fontsize=TICKSIZE-5)
+    plt.legend(fontsize=TICKSIZE)
     plt.xticks(fontsize=TICKSIZE)
     plt.yticks(fontsize=TICKSIZE)
+    plt.ylim(0, 110)
     plt.tight_layout()
-    plt.savefig('eta_analysis/height_growth.pdf')
+    plt.savefig('../figures/eta_figures/height_growth.pdf')
     plt.close()
     
-    # 2. Size Growth Plot
-    plt.figure(figsize=(10, 8))
-    for i, eta in enumerate(eta_values):
-        df = all_data[eta]
-        plt.plot(df['step'], df['size'], label=f'eta = {eta}', color=colors[i % len(colors)])
-    
-    plt.xlabel('Step', fontsize=LABELSIZE)
-    plt.ylabel('Cluster Size (sites)', fontsize=LABELSIZE)
-    # plt.title('Cluster Size Growth', fontsize=LABELSIZE)
-    plt.grid(True, alpha=0.3)
-    plt.legend(fontsize=TICKSIZE-5)
-    plt.xticks(fontsize=TICKSIZE)
-    plt.yticks(fontsize=TICKSIZE)
-    plt.tight_layout()
-    plt.savefig('eta_analysis/size_growth.pdf')
-    plt.close()
-    
-    # 3. Height vs Size Plot
-    plt.figure(figsize=(10, 8))
-    for i, eta in enumerate(eta_values):
-        df = all_data[eta]
-        plt.plot(df['size'], df['height'], label=f'eta = {eta}', color=colors[i % len(colors)])
-    
-    plt.xlabel('Cluster Size (sites)', fontsize=LABELSIZE)
-    plt.ylabel('Height', fontsize=LABELSIZE)
-    # plt.title('Height vs Size Relationship', fontsize=LABELSIZE)
-    plt.grid(True, alpha=0.3)
-    plt.legend(fontsize=TICKSIZE-5)
-    plt.xticks(fontsize=TICKSIZE)
-    plt.yticks(fontsize=TICKSIZE)
-    plt.tight_layout()
-    plt.savefig('eta_analysis/height_vs_size.pdf')
-    plt.close()
-    
-    # 4. Growth Rate Comparison
+    # 2. Growth Rate Comparison
     plt.figure(figsize=(10, 8))
     
     growth_rates = []
@@ -186,18 +154,15 @@ def create_separate_plots(all_data, clusters):
     plt.yticks(fontsize=TICKSIZE)
     plt.grid(True, alpha=0.3, axis='y')
     plt.tight_layout()
-    plt.savefig('eta_analysis/growth_rates.pdf')
+    plt.savefig('../figures/eta_figures/growth_rates.pdf')
     plt.close()
     
-    # 5. Side-by-side comparison of all clusters
+    # 3. Side-by-side comparison of all clusters
     if eta_values:
-        if len(eta_values) <= 4:
-            rows, cols = 1, len(eta_values)
-        else:
-            cols = 4  
-            rows = (len(eta_values) + cols - 1) // cols  
+        cols = 2
+        rows = (len(eta_values) + cols -1 )// cols
         
-        fig, axes = plt.subplots(rows, cols, figsize=(4*cols, 4*rows))
+        fig, axes = plt.subplots(rows, cols, figsize=(4*cols, 4*rows), sharex=True, sharey=True)
         
         # Flatten axes for easier indexing if multiple rows
         if rows > 1:
@@ -206,23 +171,23 @@ def create_separate_plots(all_data, clusters):
             axes = [axes]  
             
         # Custom colormap
-        cmap = LinearSegmentedColormap.from_list('cluster_cmap', ['white', 'darkblue'])
+        cmap = LinearSegmentedColormap.from_list('cluster_cmap', ['#FFF7CC', '#6BAED6'])
         
         # Plot each cluster
         for i, eta in enumerate(eta_values):
             if i < len(axes):
                 cluster = clusters[eta]
                 axes[i].imshow(cluster, cmap=cmap, origin='lower')
-                axes[i].set_title(f'eta = {eta}', fontsize=LABELSIZE)
-                axes[i].tick_params(axis='both', which='major', labelsize=TICKSIZE-5)
-                axes[i].set_xlabel('x', fontsize=LABELSIZE)
-                axes[i].set_ylabel('y', fontsize=LABELSIZE)
+                axes[i].set_title(rf'$\eta$ = {eta}', fontsize=LABELSIZE+5)
+                axes[i].tick_params(axis='both', which='major', labelsize=TICKSIZE+5)
+                axes[i].set_xlabel('x', fontsize=LABELSIZE+5)
+                axes[i].set_ylabel('y', fontsize=LABELSIZE+5)
 
         for i in range(len(eta_values), len(axes)):
             axes[i].axis('off')
         
         plt.tight_layout()
-        plt.savefig('eta_analysis/all_clusters.pdf', dpi=300)
+        plt.savefig('../figures/eta_figures/all_clusters.pdf', dpi=300)
         plt.close()
 
 def analyze_eta_influence():
@@ -262,4 +227,4 @@ def visualize_results():
     print("Creating plots...")
     create_separate_plots(all_data, clusters)
     
-    print("Analysis complete! Check the eta_analysis directory for results.")
+    print("Analysis complete! Check the figures folder for results.")

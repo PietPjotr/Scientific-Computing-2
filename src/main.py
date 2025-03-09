@@ -15,6 +15,7 @@ from DLA import *
 from GrayScott import *
 from plot_GrayScott import plot_results
 from dla_analysis import analyze_eta_influence, visualize_results
+import os
 
 def run_simple_dla():
     """Run a simple DLA demonstration"""
@@ -31,11 +32,13 @@ def run_eta_evaluations():
     
     os.makedirs("eta_figures", exist_ok=True)
     
-    for eta in [1, 3, 5, 8, 10]:
-        print(f"Processing eta = {eta}")
-        dla = DLA(100, eta=eta)
-        dla.animate(num_frames=1000, title=f"eta_figures/DLA_eta{eta}")
-        dla.plot(title=f"eta_figures/DLA_eta{eta}")
+    # for eta in [1, 3, 5, 8, 10]:
+    #     print(f"Processing eta = {eta}")
+    #     dla = DLA(100, eta=eta)
+    #     dla.animate(num_frames=1000, title=f"eta_figures/DLA_eta{eta}")
+    #     dla.plot(title=f"eta_figures/DLA_eta{eta}")
+    visualize_results()
+    
         
 def run_gray_scott():
     """Run Gray-Scott simulations with different parameter values"""
@@ -65,13 +68,13 @@ def main():
     # run_simple_dla()
     
     # DLA eta parameter analysis (run simulations)
-    # analyze_eta_influence()
+    #analyze_eta_influence()
     
     # Visualize previously saved DLA results
-    # visualize_results()
+    visualize_results()
     
     # Gray-Scott simulations
-    run_gray_scott()
+    #run_gray_scott()
 
 if __name__ == "__main__":
     main()
