@@ -87,10 +87,12 @@ def load_data(run_index=-1):
     return data
 
 
-def plot_data(data):
+def mc_plot_data():
     """
     Plots the 4 simulations in a 2x2 subplot.
     """
+    data = load_data()
+    print(data)
     if not data:
         print("No data to plot.")
         return
@@ -129,7 +131,7 @@ def plot_data(data):
     plt.show()
 
 
-def report_plot():
+def mc_report_plot():
     """
     Plots the desired ps values for the Monte Carlo DLA implementation.
     The values for Ps that are plotted are: [1, 0.5, 0.25, 0.15, 0.1, 0.02
@@ -180,7 +182,7 @@ def report_plot():
     for ax in axes[3:]:  # Last row, bottom row subplots
         ax.set_xlabel("x", fontsize=LABELSIZE)
 
-    for ax in axes[::3]:  # First column, leftmost column subplots
+    for ax in axes[::2]:  # First column, leftmost column subplots
         ax.set_ylabel("y", fontsize=LABELSIZE)
 
     # Adjust layout to reduce horizontal space between subplots
@@ -191,4 +193,4 @@ def report_plot():
 
 
 if __name__ == "__main__":
-    report_plot()
+    mc_report_plot()
