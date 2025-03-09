@@ -185,12 +185,19 @@ def create_separate_plots(all_data, clusters):
                 concentration = np.loadtxt(f"../results/DLA_concentration_eta{eta}.csv",
                                            delimiter=",")
 
-                axes[i].imshow(concentration, cmap='Spectral', origin='lower', vmin=0, vmax=1)
+                im = axes[i].imshow(concentration, cmap='Spectral', origin='lower', vmin=0, vmax=1)
                 axes[i].imshow(cluster, cmap=cmap, origin='lower', alpha=0.8)
                 axes[i].set_title(rf'$\eta$ = {eta}', fontsize=LABELSIZE+5)
                 axes[i].tick_params(axis='both', which='major', labelsize=TICKSIZE+5)
-                axes[i].set_xlabel('x', fontsize=LABELSIZE+5)
-                axes[i].set_ylabel('y', fontsize=LABELSIZE+5)
+                cbar = fig.colorbar(im, ax=axes[i], fraction=0.046, pad=0.04)
+                cbar.ax.tick_params(labelsize=TICKSIZE)
+                if i % 2 == 0:
+                    axes[i].set_ylabel('y', fontsize=LABELSIZE+5)
+                else:
+                    cbar.set_label('Concentration', fontsize=LABELSIZE)
+                if i == len(eta_values) - 1 or i == len(eta_values) - 2:
+                    axes[i].set_xlabel('x', fontsize=LABELSIZE+5)
+                    axes[i].tick_params(labelbottom=True)
 
         for i in range(len(eta_values), len(axes)):
             axes[i].axis('off')

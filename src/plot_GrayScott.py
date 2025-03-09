@@ -4,8 +4,8 @@ import numpy as np
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 
-LABELSIZE = 24
-TICKSIZE = 22
+LABELSIZE = 26
+TICKSIZE = 24
 
 def load_csv(filename):
     '''
