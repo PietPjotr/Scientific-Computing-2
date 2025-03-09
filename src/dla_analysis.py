@@ -23,8 +23,8 @@ from data_processing import save_step_data_to_csv, load_all_data, load_clusters
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 colors = sns.color_palette("Set2", 8)
-LABELSIZE = 18
-TICKSIZE = 16
+LABELSIZE = 20
+TICKSIZE = 18
 
 
 def run_simulation_with_data_saving(eta, N=100, max_steps=1000):
