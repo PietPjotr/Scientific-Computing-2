@@ -15,9 +15,9 @@ import pandas as pd
 
 def save_step_data_to_csv(step_data, eta):
     """Save step data to CSV file for later analysis"""
-    os.makedirs("eta_analysis/data", exist_ok=True)
+    os.makedirs("../eta_analysis/data", exist_ok=True)
     
-    filename = f"eta_analysis/data/steps_eta{eta}.csv"
+    filename = f"../eta_analysis/data/steps_eta{eta}.csv"
     
     with open(filename, 'w', newline='') as csvfile:
         if not step_data:
@@ -34,17 +34,18 @@ def save_step_data_to_csv(step_data, eta):
     
     print(f"  Saved {len(step_data)} steps to {filename}")
     
-    os.makedirs("eta_analysis/clusters", exist_ok=True)
-    
-    if step_data and hasattr(step_data[-1], 'cluster'):
-        with open(f"eta_analysis/clusters/cluster_eta{eta}.pkl", 'wb') as f:
+    os.makedirs("../eta_analysis/clusters", exist_ok=True)
+    print("step_data", step_data[-1])
+    if step_data and 'cluster'in step_data[-1]:
+        print("saving cluster", step_data[-1]['cluster'])
+        with open(f"../eta_analysis/clusters/cluster_eta{eta}.pkl", 'wb') as f:
             pickle.dump(step_data[-1]['cluster'], f)
 
 def save_summary_results(summary_results):
     """Save summary results to CSV file"""
-    os.makedirs("eta_analysis", exist_ok=True)
+    os.makedirs("../eta_analysis", exist_ok=True)
     
-    with open('eta_analysis/summary_results.csv', 'w', newline='') as csvfile:
+    with open('../eta_analysis/summary_results.csv', 'w', newline='') as csvfile:
         fieldnames = ['eta', 'final_height', 'final_width', 'final_size', 
                      'steps_completed', 'time']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -56,7 +57,7 @@ def save_summary_results(summary_results):
 
 def load_all_data():
     """Load all saved CSV files with step data"""
-    data_dir = "eta_analysis/data"
+    data_dir = "../eta_analysis/data"
     
     if not os.path.exists(data_dir):
         print(f"Directory {data_dir} not found!")

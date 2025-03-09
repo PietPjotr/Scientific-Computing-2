@@ -26,7 +26,7 @@ colors = sns.color_palette("Set2", 8)
 LABELSIZE = 18
 TICKSIZE = 16
 
-def run_simulation_with_data_saving(eta, N=100, max_steps=100):
+def run_simulation_with_data_saving(eta, N=100, max_steps=1000):
     """Run a single DLA simulation and save data"""
     print(f"\nSimulating with eta = {eta}")
     dla = DLA(N=N, eta=eta)
@@ -83,6 +83,7 @@ def run_simulation_with_data_saving(eta, N=100, max_steps=100):
                     
         except Exception as e:
             print(f"  Unexpected error at step {step}: {e}")
+    dla.save_as_csv()
     save_step_data_to_csv(step_data, eta)
     
     final_height = height if 'height' in locals() else 0
@@ -176,8 +177,12 @@ def create_separate_plots(all_data, clusters):
         # Plot each cluster
         for i, eta in enumerate(eta_values):
             if i < len(axes):
-                cluster = clusters[eta]
-                axes[i].imshow(cluster, cmap=cmap, origin='lower')
+                cluster = np.loadtxt(f"../results/DLA_cluster_eta{eta}.csv", delimiter=",")
+                cluster_array = np.ma.masked_where(cluster == 0, cluster)
+                concentration = np.loadtxt(f"../results/DLA_concentration_eta{eta}.csv", delimiter=",")
+                
+                axes[i].imshow(concentration, cmap='Spectral', origin='lower', vmin=0, vmax=1)
+                axes[i].imshow(cluster, cmap='gray', origin='lower', alpha=0.5)
                 axes[i].set_title(rf'$\eta$ = {eta}', fontsize=LABELSIZE+5)
                 axes[i].tick_params(axis='both', which='major', labelsize=TICKSIZE+5)
                 axes[i].set_xlabel('x', fontsize=LABELSIZE+5)
@@ -192,12 +197,12 @@ def create_separate_plots(all_data, clusters):
 
 def analyze_eta_influence():
     """Run simulations and analysis for different eta values"""
-    os.makedirs("eta_analysis", exist_ok=True)
-    os.makedirs("eta_analysis/data", exist_ok=True)
-    os.makedirs("eta_analysis/clusters", exist_ok=True)
+    os.makedirs("../eta_analysis", exist_ok=True)
+    os.makedirs("../eta_analysis/data", exist_ok=True)
+    os.makedirs("../eta_analysis/clusters", exist_ok=True)
     
-    eta_values = [0.1, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0]
-    max_steps = 100
+    eta_values = [0.1, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 10.0]
+    max_steps = 1000
     summary_results = []
     
     # simulations for each eta and save data

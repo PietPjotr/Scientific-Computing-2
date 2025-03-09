@@ -281,6 +281,15 @@ class DLA:
         if np.any(self.cluster[self.N -2, :] == 1):
             print(f"Cluster reached the top of the grid at step {self.NO_steps}")
             raise StopIteration
+    
+    def save_as_csv(self):
+        """Save the current concentration field to a CSV file."""
+        filename = f"../results/DLA_concentration_eta{self.eta}.csv"
+        np.savetxt(filename, self.c, delimiter=",")
+        print(f"Concentration field saved to {filename}")
+        cluster_filename = f"../results/DLA_cluster_eta{self.eta}.csv"
+        np.savetxt(cluster_filename, self.cluster, delimiter=",")
+        print(f"Cluster field saved to {filename}")
 
     def plot(self, title="test"):
         """Plot the current state of the system as a 2D color map"""
