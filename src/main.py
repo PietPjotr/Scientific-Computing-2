@@ -92,7 +92,7 @@ def main():
     # run_simple_dla()
 
     # DLA eta parameter analysis (run simulations)
-    analyze_eta_influence()
+    #analyze_eta_influence()
     
     # Visualize previously saved DLA results
     visualize_results()
