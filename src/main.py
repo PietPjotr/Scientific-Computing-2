@@ -13,8 +13,8 @@ python3 main.py
 """
 from DLA import DLA
 from GrayScott import *
-from plot_MC import report_plot
-from run_MC import run_mc_parallel
+from plot_MC import mc_report_plot, mc_plot_data
+from run_MC import run_mc_parallel, run_mc_process
 from plot_GrayScott import plot_results
 from dla_analysis import analyze_eta_influence, visualize_results
 
@@ -61,6 +61,7 @@ def run_eta_evaluations():
         dla.animate(num_frames=1000, title=f"eta_figures/DLA_eta{eta}")
         dla.plot(title=f"eta_figures/DLA_eta{eta}")
 
+
 def run_gray_scott():
     """Run Gray-Scott simulations with different parameter values"""
     f_values =[0.025, 0.03, 0.035, 0.04, 0.045, 0.05]
@@ -95,13 +96,14 @@ def main():
     # visualize_results()
 
     # Gray-Scott simulations
-    run_gray_scott()
+    # run_gray_scott()
 
     # MC run:
-    # run_mc_parallel([1, 0.9, 0.8, 0.7])
+    # run_mc_parallel(1000)
+    # mc_plot_data()
 
     # MC plotting:
-    # report_plot()
+    # mc_report_plot
 
 
 if __name__ == "__main__":
