@@ -12,7 +12,7 @@ Typical usage example:
 python3 main.py
 """
 from DLA import DLA
-from GrayScott import *
+from GrayScott import GrayScott
 from plot_MC import mc_report_plot, mc_plot_data
 from run_MC import run_mc_sequential
 from plot_GrayScott import plot_results
@@ -25,9 +25,8 @@ def run_simple_dla():
     print("Running simple DLA demonstration")
     dla = DLA(100, eta=1)
     dla.animate(num_frames=20)
-    # for i in range(10):
-    #     dla.plot()
-    #     dla.step()
+    for i in range(10):
+        dla.step()
 
 
 def eta_evaluations():
@@ -73,7 +72,10 @@ def run_gray_scott():
         iterations = []
         for f in f_values:
             gs = GrayScott(100, k=0.06, f=f, Du=du, Dv=0.08, noise=True)
-            nr_iterations = gs.run_until_criterium(threshold=0.1, max_steps=20000) # runs simulation until all concentrations are below the threshold or max_steps is reached
+
+            # runs simulation until all concentrations are below the threshold or max_steps is reached
+            nr_iterations = gs.run_until_criterium(threshold=0.1, max_steps=20000)
+
             iterations.append(nr_iterations)
             titles.append(f"f={f} ({nr_iterations} iterations)du{du}.csv")
             gs.save_to_csv(f"f={f} ({nr_iterations} iterations)du{du}")
@@ -89,13 +91,13 @@ def main():
     # Uncomment the function you want to run
 
     # Simple DLA demonstration
-    # run_simple_dla()
+    run_simple_dla()
 
     # DLA eta parameter analysis (run simulations)
-    #analyze_eta_influence()
-    
+    # analyze_eta_influence()
+
     # Visualize previously saved DLA results
-    visualize_results()
+    # visualize_results()
 
     # Gray-Scott simulations
     #run_gray_scott()

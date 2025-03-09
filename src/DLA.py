@@ -4,25 +4,16 @@ Course: Scientific Computing
 Authors: Margarita Petrova, Maan Scipio, Pjotr Piet
 ID's: 15794717, 15899039, 12714933
 
-Description: A one-line summary of the module or program, terminated by a period.
-
-Leave one blank line.  The rest of this docstring should contain an
-overall description of the module or program.  Optionally, it may also
-contain a brief description of exported classes and functions and/or usage
-examples.
-
-Typical usage example:
-
-foo = ClassFoo()
-bar = foo.function_bar()
+Description: Contains the implementation of the Diffusion Limited Aggregation
+(DLA) model and related analysis functions. This file makes use of SOR for
+the numerical diffusion solver. It also contains some plot and animate and
+store functions to store the results of the experiments.
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.ndimage import convolve      # used for fast double for loop
 from matplotlib.animation import FuncAnimation
 import seaborn as sns
-from datetime import datetime
 
 
 # global vars indicated by all caps
@@ -33,10 +24,8 @@ colors = sns.color_palette("Set2", 8)
 LABELSIZE = 20
 TICKSIZE = 16
 
+
 class DLA:
-    # TODO: add maybe the starting position for the cluster,
-    # and or also a way to determine the source/sinc positions
-    # standard is top row source, bottom row sink and of course the clusters are sinks as well
     def __init__(self, N, eta=1, tol=1e-4, max_iter=10000, omega=1.9):
         self.eta = eta
         self.N = N
@@ -51,7 +40,7 @@ class DLA:
 
         self.sources[self.N-1, :] = 1       # top boundary source
         self.sinks[0, :] = 1                # bottom boundary sink
-        self.cluster[0, N // 2] = 1    # starting point cluster in the middle
+        self.cluster[0, N // 2] = 1         # starting point cluster in the middle
 
         # initialise candidate array:
         self.candidates = self.init_candidates()
@@ -129,32 +118,6 @@ class DLA:
 
         return delta
 
-    def step_SOR_fast(self):
-        """
-        Perform one iteration of SOR (self organised relaxation).
-
-        Returns:
-            delta: 2d numpy array, the maximum difference between old and new
-            concentration arrays
-        """
-        c_old = np.copy(self.c)
-
-        # Define a convolution kernel for diffusion (4-point stencil) and apply
-        kernel = np.array([[0, 1, 0],
-                           [1, 0, 1],
-                           [0, 1, 0]]) / 4
-        c_new = convolve(self.c, kernel, mode='wrap')
-
-        # Identify all bitmap positions to be skipped
-        mask = self.get_mask()
-
-        # Apply SOR update only to non-bitmap positions
-        self.c[~mask] = self.omega * c_new[~mask] + (1 - self.omega) * self.c[~mask]
-
-        delta = np.max(np.abs(self.c - c_old))
-
-        return delta
-
     def solve_diffusion(self, method=step_SOR):
         """
         Solve the diffusion equation using SOR based on the tolerance level
@@ -186,7 +149,7 @@ class DLA:
         r, c = position
         # loop over all neighbours
         for dr, dc in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
-            rn = r + dr
+            nr = r + dr
             nc = c + dc
             # add if not a constant position
             if mask[nr, nc] != 1:
@@ -276,12 +239,12 @@ class DLA:
 
         self.NO_steps += 1
         print(f'step: {self.NO_steps}')
-        
+
         # Break if the cluster reaches the top of the grid
         if np.any(self.cluster[self.N -2, :] == 1):
             print(f"Cluster reached the top of the grid at step {self.NO_steps}")
             raise StopIteration
-    
+
     def save_as_csv(self):
         """Save the current concentration field to a CSV file."""
         filename = f"../results/DLA_concentration_eta{self.eta}.csv"
@@ -335,18 +298,18 @@ class DLA:
 
         # Main concentration field
         im = ax.imshow(self.c,
-                    extent=[0, 1, 0, 1],
-                    origin='lower',
-                    cmap='Spectral',
-                    aspect='equal',
-                    vmin=0, vmax=1)
+                       extent=[0, 1, 0, 1],
+                       origin='lower',
+                       cmap='Spectral',
+                       aspect='equal',
+                       vmin=0, vmax=1)
 
         # Cluster overlay (initially empty but will be updated)
         im_cluster = ax.imshow(np.ma.masked_where(self.cluster == 0, self.cluster),
-                            extent=[0, 1, 0, 1],
-                            origin='lower',
-                            cmap='gray',
-                            alpha=0.5)
+                               extent=[0, 1, 0, 1],
+                               origin='lower',
+                               cmap='gray',
+                               alpha=0.5)
 
         # Colorbar
         ax.set_xlabel('x', fontsize=LABELSIZE)
@@ -375,35 +338,35 @@ class DLA:
         anim = FuncAnimation(fig, update, frames=num_frames,
                             interval=interval, blit=False)
 
-        anim.save(filename=f"./figures/{title}timedep_diffusion_.mkv", writer="ffmpeg")
-        #plt.show()
+        anim.save(filename=f"../figures/{title}DLA.mkv", writer="ffmpeg")
+        plt.show()
 
         return anim
-    
+
     def analyze_dla(DLA_class, eta_values=[0.5, 1.0, 1.5, 2.0], N=100, max_steps=200, omega=1.9):
         """Compact analysis of DLA growth and convergence for different eta values"""
         results = {}
-        
+
         for eta in eta_values:
             print(f"\nAnalyzing eta = {eta}")
-            
+
             # Create DLA instance
             dla = DLA_class(N=N, eta=eta, tol=1e-4, omega=omega)
-            
+
             # Track metrics
             heights = []          # Max height at each step
             sizes = []            # Number of cluster sites
             iterations = []       # SOR iterations per step
-            
+
             start_time = time.time()
-            
+
             # Run simulation
             for step in range(max_steps):
                 # Record cluster metrics
                 cluster_points = np.argwhere(dla.cluster == 1)
                 sizes.append(len(cluster_points))
                 heights.append(np.max(cluster_points[:, 0]) if len(cluster_points) > 0 else 0)
-                
+
                 # Solve diffusion with iteration counting
                 iters = 0
                 delta = dla.step_SOR_fast()
@@ -412,24 +375,24 @@ class DLA:
                     delta = dla.step_SOR_fast()
                     iters += 1
                 iterations.append(iters)
-                
+
                 # Update candidates and grow cluster
                 dla.candidates = dla.init_candidates()
                 probabilities = dla.calculate_probabilities()
                 dla.update_cluster(probabilities)
                 dla.NO_steps += 1
-                
+
                 # Print progress occasionally
                 if step % 20 == 0:
                     print(f"  Step {step}, Height: {heights[-1]}, Iterations: {iters}")
-                
+
                 # Stop if cluster reaches top
                 if np.any(dla.cluster[N-2, :] == 1):
                     print(f"  Cluster reached top at step {step}")
                     break
-                    
+
             total_time = time.time() - start_time
-            
+
             # Store results
             results[eta] = {
                 'cluster': dla.cluster.copy(),
@@ -439,63 +402,63 @@ class DLA:
                 'steps': len(heights),
                 'time': total_time
             }
-            
+
             # Print summary
             print(f"  Steps completed: {len(heights)}")
             print(f"  Final height: {heights[-1]}")
             print(f"  Average iterations: {np.mean(iterations):.2f}")
             print(f"  Total time: {total_time:.2f} seconds")
-        
+
         return results
 
     def plot_results(results):
         """Create concise plots of key metrics"""
         eta_values = sorted(results.keys())
         colors = sns.color_palette("viridis", len(eta_values))
-        
+
         # Figure 1: Growth metrics
         fig, ax = plt.subplots(1, 2, figsize=(12, 5))
-        
+
         # Height growth
         for i, eta in enumerate(eta_values):
             steps = np.arange(len(results[eta]['heights']))
             ax[0].plot(steps, results[eta]['heights'], label=f'η = {eta}', color=colors[i])
-        
+
         ax[0].set_xlabel('Growth Steps')
         ax[0].set_ylabel('Maximum Height')
         ax[0].set_title('Cluster Height Growth')
         ax[0].grid(True, alpha=0.3)
         ax[0].legend()
-        
+
         # Height vs Size (density)
         for i, eta in enumerate(eta_values):
-            ax[1].plot(results[eta]['sizes'], results[eta]['heights'], 
+            ax[1].plot(results[eta]['sizes'], results[eta]['heights'],
                     label=f'η = {eta}', color=colors[i])
-        
+
         ax[1].set_xlabel('Cluster Size (sites)')
         ax[1].set_ylabel('Maximum Height')
         ax[1].set_title('Height vs Size (Density)')
         ax[1].grid(True, alpha=0.3)
         ax[1].legend()
-        
+
         plt.tight_layout()
         plt.savefig('dla_growth_metrics.pdf')
         plt.show()
-        
+
         # Figure 2: Convergence metrics
         fig, ax = plt.subplots(1, 2, figsize=(12, 5))
-        
+
         # Iterations per step
         for i, eta in enumerate(eta_values):
             steps = np.arange(len(results[eta]['iterations']))
             ax[0].plot(steps, results[eta]['iterations'], label=f'η = {eta}', color=colors[i])
-        
+
         ax[0].set_xlabel('Growth Steps')
         ax[0].set_ylabel('SOR Iterations')
         ax[0].set_title('Convergence Iterations')
         ax[0].grid(True, alpha=0.3)
         ax[0].legend()
-        
+
         # Average iterations by eta
         avg_iters = [np.mean(results[eta]['iterations']) for eta in eta_values]
         ax[1].bar(range(len(eta_values)), avg_iters, color=colors)
@@ -505,7 +468,7 @@ class DLA:
         ax[1].set_xticks(range(len(eta_values)))
         ax[1].set_xticklabels([str(eta) for eta in eta_values])
         ax[1].grid(True, alpha=0.3, axis='y')
-        
+
         plt.tight_layout()
         plt.savefig('dla_convergence_metrics.pdf')
         plt.show()
@@ -513,41 +476,23 @@ class DLA:
     def run_analysis(DLA_class):
         """Run DLA analysis and plot results"""
         # Define parameters
-        eta_values = [1,3,5,8,10]
+        eta_values = [1, 3, 5, 8, 10]
         N = 100
         max_steps = 200
         omega = 1.9
-        
+
         print(f"Running DLA analysis for eta values: {eta_values}")
         results = analyze_dla(DLA_class, eta_values, N, max_steps, omega)
         plot_results(results)
-        
+
         # Summary table
         print("\n===== Results Summary =====")
         print(f"{'Eta':^5} | {'Steps':^6} | {'Height':^6} | {'Size':^6} | {'Avg Iter':^8} | {'Time (s)':^8}")
         print("-" * 50)
-        
+
         for eta in sorted(results.keys()):
             r = results[eta]
             print(f"{eta:^5} | {r['steps']:^6} | {r['heights'][-1]:^6.0f} | {r['sizes'][-1]:^6} | "
-                f"{np.mean(r['iterations']):^8.2f} | {r['time']:^8.2f}")
-        
+                  f"{np.mean(r['iterations']):^8.2f} | {r['time']:^8.2f}")
+
         return results
-
-"""
-questions:
-    1) concentratinos can become negative because it could happen that positions
-    get surrounded by the cluster, which means that the value for the neighbours
-    will be 0, and because of the sor method the concentration of the previous
-    time step will be substracted. So then 0 - positive --> negative.
-    What do I do when this happens? Right now I'm simply clipping all the
-    concentrations of the candidates.
-
-    2) This method is very slow, so how do I run more growth runs?
-    3) What results do I look at when varying the eta parameter?
-    4) Do I also look at different starting conditions?
-    5) for quantifying the influence of omega; do I optimise omega per
-    iteration? Or do I look at a few different runs?
-
-    A bit of vagueness in how to measure things
-"""
