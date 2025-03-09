@@ -21,21 +21,22 @@ from MC import MC
 from datetime import datetime
 
 
-def run_mc(max_iter, ps, timestamp):
+def run_mc_process(max_iter, ps, timestamp):
     print(f"Running MC with ps={ps}")
     mc = MC(100, ps=ps, max_iter=max_iter, timestamp=timestamp)
     mc.run()
     mc.save_to_csv()
 
 
-def main():
-    max_iter = 1000
-    ps_values = [0.04, 0.03, 0.02, 0.01]
+def run_mc_parallel(ps_values, max_iter=float('inf')):
+    if not type(ps_values) == list() or not ps_values:
+        raise ValueError("No valid values for ps_values, should be " +
+                          "a list with positive floats")
 
     processes = []
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     for ps in ps_values:
-        p = mp.Process(target=run_mc, args=(max_iter, ps, timestamp))
+        p = mp.Process(target=run_mc_process, args=(max_iter, ps, timestamp))
         p.start()
         processes.append(p)
 

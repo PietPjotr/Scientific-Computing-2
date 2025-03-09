@@ -13,7 +13,7 @@ LABELSIZE = 20
 TICKSIZE = 16
 
 class GrayScott:
-    def __init__(self, N = 100, Du= 0.16, Dv = 0.08, f = 0.035, k = 0.06, dt = 1, dx = 1):
+    def __init__(self, N = 100, Du= 0.16, Dv = 0.08, f = 0.035, k = 0.06, dt = 1, dx = 1, noise = True):
         self.N = N
         self.Du = Du
         self.Dv = Dv
@@ -31,7 +31,9 @@ class GrayScott:
         self.v[middle-r:middle+r, middle-r:middle+r] = 0.25
 
         # Noise
-        self.v += 0.01*np.random.rand(N, N)
+        if noise:
+            self.v += 0.01*np.random.rand(N, N)
+            self.u += 0.01*np.random.rand(N, N)
 
     def Boundary_conditions(self, vector):
         '''
@@ -47,7 +49,7 @@ class GrayScott:
         Determine nabla squared, e.g. Laplacian
         '''
         nabla_squared = (u[ :-2, 1:-1] + u[1:-1, :-2] - 4*u[1:-1, 1:-1] 
-                        + u[1:-1, 2:] +   u[2:  , 1:-1] )
+                        + u[1:-1, 2:] +   u[2:  , 1:-1] ) / self.dx**2
         return nabla_squared
     
     def Reaction(self):
@@ -62,11 +64,25 @@ class GrayScott:
         dudt = self.Du*Lapl_u - uv_squared + self.f*(1 - u_ins)
         dvdt = self.Dv*Lapl_v + uv_squared - (self.f + self.k)* v_ins
 
-        self.u[1:-1, 1:-1] += dudt
-        self.v[1:-1, 1:-1] += dvdt
+        self.u[1:-1, 1:-1] += dudt * self.dt
+        self.v[1:-1, 1:-1] += dvdt * self.dt
 
         self.Boundary_conditions(self.u)
         self.Boundary_conditions(self.v)
+    
+    def run_until_criterium(self, threshold=0.01, max_steps=10000):
+        '''	
+        Runs simulation until the threshhold concentration or max_steps is reached.
+        '''
+        step = 0
+        while step < max_steps:
+            self.Reaction()
+            if np.all(self.v < threshold):
+                print(f"All concentrations in v fell below {threshold} at step {step}.")
+                break
+            step += 1
+        return step
+
 
     def plot(self, title="Gray-ScottSimulation"):
         """Plot the current state of the system."""
@@ -81,7 +97,7 @@ class GrayScott:
         plt.yticks(fontsize=TICKSIZE)
         plt.tight_layout()
         plt.savefig(f'../figures/GrayScott/{title}.pdf')
-        plt.show()
+
 
     def animate(self, num_frames=200, interval=100, steps_per_frame=1, title="GrayScott"):
         """Animate the evolution of the system."""
@@ -100,7 +116,12 @@ class GrayScott:
             return [im]
         
         anim = FuncAnimation(fig, update, frames=num_frames, interval=interval, blit=False)
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         anim.save(f'../figures/GrayScott/{title}.mkv', writer="ffmpeg")
         return anim
+    
+    def save_to_csv(self, title="GrayScott"):
+        np.savetxt(f'../results/{title}.csv', self.v, delimiter=',')
+        print(f"Data saved to ../results/{title}.csv")
+
+
         

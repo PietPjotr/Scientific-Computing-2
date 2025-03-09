@@ -11,13 +11,16 @@ Typical usage example:
 
 python3 main.py
 """
-
-from DLA import *
+from DLA import DLA
 from GrayScott import *
 from plot_MC import report_plot
+from run_MC import run_mc_parallel
+from plot_GrayScott import plot_results
+from dla_analysis import analyze_eta_influence, visualize_results
 
-
-def main():
+def run_simple_dla():
+    """Run a simple DLA demonstration"""
+    print("Running simple DLA demonstration")
     dla = DLA(100, eta=1)
     dla.animate(num_frames=20)
     # for i in range(10):
@@ -45,8 +48,64 @@ def gray_scott():
     gs.plot(title=f"GS_pattern_{nr_frames}frames")
 
 
+    for i in range(10):
+        dla.plot()
+        dla.step()
+
+def run_eta_evaluations():
+    """Run DLA simulations with different eta values and create animations"""
+    print("Running DLA with multiple eta values")
+
+    os.makedirs("eta_figures", exist_ok=True)
+
+    for eta in [1, 3, 5, 8, 10]:
+        print(f"Processing eta = {eta}")
+        dla = DLA(100, eta=eta)
+        dla.animate(num_frames=1000, title=f"eta_figures/DLA_eta{eta}")
+        dla.plot(title=f"eta_figures/DLA_eta{eta}")
+
+def run_gray_scott():
+    """Run Gray-Scott simulations with different parameter values"""
+    f_values =[0.025, 0.03, 0.035, 0.04, 0.045, 0.05]
+    du_values = [0.12, 0.16, 0.2]
+    for du in du_values:
+        titles = []
+        iterations = []
+        for f in f_values:
+            gs = GrayScott(100, k=0.06, f=f, Du=du, Dv=0.08, noise=True)
+            nr_iterations = gs.run_until_criterium(threshold=0.1, max_steps=20000) # runs simulation until all concentrations are below the threshold or max_steps is reached
+            iterations.append(nr_iterations)
+            titles.append(f"f={f} ({nr_iterations} iterations)du{du}.csv")
+            gs.save_to_csv(f"f={f} ({nr_iterations} iterations)du{du}")
+        plot_results(titles, "f", f_values, iterations, title=f"GrayScott_results_fvaluesdu{du}")
+
+    # Mitosis simulation
+    # gs = GrayScott(100, k=0.06, f=0.025, Du=0.2, Dv=0.08, noise=True)
+    # gs.animate(num_frames=2000, title="GrayScott_mitosis_0.2")
+
+
+def main():
+    """Main function to run the selected simulation"""
+    # Uncomment the function you want to run
+
+    # Simple DLA demonstration
+    # run_simple_dla()
+
+    # DLA eta parameter analysis (run simulations)
+    # analyze_eta_influence()
+
+    # Visualize previously saved DLA results
+    # visualize_results()
+
+    # Gray-Scott simulations
+    run_gray_scott()
+
+    # MC run:
+    # run_mc_parallel([1, 0.9, 0.8, 0.7])
+
+    # MC plotting:
+    # report_plot()
+
 
 if __name__ == "__main__":
-    # main()
-    # eta_evaluations()
-    gray_scott()
+    main()
