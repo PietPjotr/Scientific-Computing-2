@@ -116,10 +116,9 @@ def create_separate_plots(all_data, clusters):
     plt.ylabel('Height', fontsize=LABELSIZE)
     # plt.title('Cluster Height Growth', fontsize=LABELSIZE)
     plt.grid(True, alpha=0.3)
-    plt.legend(fontsize=TICKSIZE)
+    plt.legend(fontsize=TICKSIZE, handlelength=0.5, handletextpad=0.3, borderpad=0.3, loc='upper left', bbox_to_anchor=(1.02, 1))
     plt.xticks(fontsize=TICKSIZE)
     plt.yticks(fontsize=TICKSIZE)
-    plt.ylim(0, 110)
     plt.tight_layout()
     plt.savefig('../figures/eta_figures/height_growth.pdf')
     plt.close()
@@ -172,7 +171,7 @@ def create_separate_plots(all_data, clusters):
             axes = [axes]  
             
         # Custom colormap
-        cmap = LinearSegmentedColormap.from_list('cluster_cmap', ['#FFF7CC', '#6BAED6'])
+        cmap = LinearSegmentedColormap.from_list('cluster_cmap', [(250/255, 250/255, 250/255, 0.3), "#FFFF00"])
         
         # Plot each cluster
         for i, eta in enumerate(eta_values):
@@ -182,7 +181,7 @@ def create_separate_plots(all_data, clusters):
                 concentration = np.loadtxt(f"../results/DLA_concentration_eta{eta}.csv", delimiter=",")
                 
                 axes[i].imshow(concentration, cmap='Spectral', origin='lower', vmin=0, vmax=1)
-                axes[i].imshow(cluster, cmap='gray', origin='lower', alpha=0.5)
+                axes[i].imshow(cluster, cmap=cmap, origin='lower', alpha = 0.8)
                 axes[i].set_title(rf'$\eta$ = {eta}', fontsize=LABELSIZE+5)
                 axes[i].tick_params(axis='both', which='major', labelsize=TICKSIZE+5)
                 axes[i].set_xlabel('x', fontsize=LABELSIZE+5)
