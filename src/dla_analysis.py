@@ -99,8 +99,8 @@ def create_separate_plots(all_data, clusters):
     eta_values = sorted(all_data.keys())
     
     colors = sns.color_palette("Set2", 8)
-    LABELSIZE = 40
-    TICKSIZE = 31
+    LABELSIZE = 42
+    TICKSIZE = 34
     
     os.makedirs("eta_analysis", exist_ok=True)
     
