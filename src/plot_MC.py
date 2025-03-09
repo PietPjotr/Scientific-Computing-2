@@ -126,12 +126,15 @@ def plot_data(data):
 
     # Adjust layout and save the figure
     plt.tight_layout()
-    # plt.savefig("../figures/MC_comparison.pdf")
     plt.show()
 
 
 def report_plot():
-    # 1, 0.5, 0.25, 0.15, 0.1, 0.02
+    """
+    Plots the desired ps values for the Monte Carlo DLA implementation.
+    The values for Ps that are plotted are: [1, 0.5, 0.25, 0.15, 0.1, 0.02
+    """
+    # loads the date of the different runs
     data0 = load_data(0)  # contains 1, 0.75, 0.5, and 0.25
     data1 = load_data(1)  # contains 0.2, 0.15, 0.1, 0.05
     data2 = load_data(2)  # contains 0.04, 0.03, 0.02, 0.01

@@ -14,6 +14,8 @@ python3 main.py
 
 from DLA import *
 from GrayScott import *
+from plot_MC import report_plot
+
 
 def main():
     dla = DLA(100, eta=1)
@@ -22,11 +24,13 @@ def main():
     #     dla.plot()
     #     dla.step()
 
+
 def eta_evaluations():
     for eta in [10]:
         dla = DLA(100, eta=eta)
         dla.animate(num_frames=1000, title=f"eta_figures/DLA_eta{eta}")
         #dla.plot(title=f"eta_figures/DLA_eta{eta}")
+
 
 def gray_scott():
     gs = GrayScott(100) #, k=0.062, f=0.035, Du=0.16, Dv=0.08)
@@ -36,10 +40,10 @@ def gray_scott():
         gs.Reaction()
         if i % 200 == 0:
             print(f"Iteration {i}")
-    
+
     # Plot the final state
     gs.plot(title=f"GS_pattern_{nr_frames}frames")
-    
+
 
 
 if __name__ == "__main__":
